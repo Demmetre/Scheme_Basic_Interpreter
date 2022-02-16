@@ -88,6 +88,7 @@ def testEasyFuncs():
     testsDict["(define (filter lst) (cond ((null? lst) '()) ((> (car lst ) 0) (cons (car lst) (filter (cdr lst)))) ((filter (cdr lst))) ))"] = "success"
     testsDict["(filter (filterRange '(1 2 3 4 5 6 7 ) 2 5))"] = [2, 3, 4, 5]
 
+
 def printLex(tok):
     for tok in tok: 
         print(tok.token + " " + " type : " + tok.get_type())
