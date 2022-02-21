@@ -10,6 +10,9 @@ class Lexer_S:
         self.regString = "\(|\)|[a-zA-Z]\w*|-?\d+\.?\d*|\?|>=|=|<=|>|<|'|\.|\+|\-|/|\*|equal|#t|#f|define|map|lambda|and|or|else|if|eval|append|apply|length|null|cdr|car|cons"
         self.path = filePath
         self.result = []
+
+    # Lexer function , returns list of Tokens, described in tokens.py
+
     def lex(self,text):
         sourceFile = None
         if self.path != None :

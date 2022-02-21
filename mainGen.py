@@ -37,6 +37,10 @@ class Generator:
             return temp
         except StopIteration:
             return None
+
+
+    # returns list of arguments, when the function is called
+
     def getArgs(self,data) :
         res = []
         peek = self.peek()
@@ -64,6 +68,8 @@ class Generator:
                     self.next_token()
             peek = self.peek()
         return res
+    
+
     
     def parse_expression(self,data,flag = True):
         next_token = self.next_token()

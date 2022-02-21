@@ -87,10 +87,7 @@ class Procedure:
                 print("No matching syntax rule, no declaration seen for " + next_token.token)
                 return
             a = self.getArgs()
-            # print(a)
             func = self.data[next_token.token]
-            peek = self.peek()
-            # print(func(a))
             r = func(a)
             self.next_token()
             return r
@@ -162,7 +159,6 @@ class Procedure:
             elif peek.get_type() == "IDENTIFIER" :
                 check = self.args[self.names.get(peek.token)]
                 return check
-            # print(peek.token)
             if peek.token != "(":
                 return "unexpected token"
             self.next_token()
@@ -182,7 +178,6 @@ class Procedure:
                 self.next_token()
                 res = self.par_list()
             self.next_token()
-            # self.next_token()
             peek = self.peek()
             if res == None:
                 return check
@@ -299,12 +294,7 @@ class Procedure:
             if peek.token == "(":
                 self.next_token()
                 temp = self.parse_expression()
-                # self.next_token()
                 peek = self.peek()
-                # if peek.token == ")" :
-                #     self.next_token()
-                #     peek = self.peek()
-
                 res.append(temp)
             elif peek.get_type() == "IDENTIFIER":
                 temp = None
@@ -488,7 +478,6 @@ class Procedure:
         if peek.get_type() == "IDENTIFIER":
             lst= self.getArgs()
         elif peek.token == "(":
-            # self.next_token()
             lst = self.getArgs()
         else :
             print("invalid identifer")
@@ -579,7 +568,6 @@ class Procedure:
             self.next_token()
             self.next_token()
             ifbody = self.par_list()
-            # self.next_token()
             peek = self.peek()
         else :
             if peek.token == "(":
@@ -590,7 +578,6 @@ class Procedure:
             else:
                 print("no matching syntax rule")
                 return 0
-            # self.next_token()
             peek = self.peek()
         return ifbody
 
@@ -622,7 +609,6 @@ class Procedure:
         tempCheck = self.parse_fullCond(data,flag)
         peek = self.peek()
         if tempCheck:
-            # self.next_token()
             peek = self.peek()
             if peek.token != ")":
                 print("invalid character")
@@ -630,7 +616,6 @@ class Procedure:
             self.next_token()
             return self.tmpIf()
         else :
-            # self.next_token()
             peek = self.peek()
             if peek.token != ")":
                 print("invalid character")
@@ -653,13 +638,11 @@ class Procedure:
                     c = c+1
                 elif peek.token == ")":
                     c = c - 1
-                # print(peek.token)
                 self.next_token()
                 peek = self.peek()
             self.next_token()
             peek = self.peek()
             return self.tmpIf()
-            # return self.tmpElse()  
 
     def parse_append(self,p):
         peek = self.peek()
@@ -850,7 +833,6 @@ class Procedure:
                 self.next_token()
                 peek = self.peek()
                 temp*=self.parse_expression(data,False)
-                self.next_token()
                 peek = self.peek()
             elif peek.get_type() == "NUMBER":    
                 temp *= self.getNumber(peek.token)
@@ -864,6 +846,7 @@ class Procedure:
             else :
                 print("no matching syntax rule")
                 return
+        self.next_token()
         return res/temp
 
     def parseMulti(self,data,p):
@@ -874,7 +857,6 @@ class Procedure:
                 self.next_token()
                 peek = self.peek()
                 res*=self.parse_expression(data,False)
-                # self.next_token()
                 peek = self.peek()
             elif peek.get_type() == "NUMBER":
                 res *= self.getNumber(peek.token)

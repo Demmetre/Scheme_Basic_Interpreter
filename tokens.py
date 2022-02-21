@@ -1,7 +1,14 @@
 
 import re
 
+# Class identifies our scheme syntax.
+# Below you can see types in detail
+
+
+
 class Tokens:
+
+
 
     def __init__(self,token):
         self.type = "NONE"
@@ -40,6 +47,11 @@ class Tokens:
             "cons" : "CONS",
             "equal" : "EQUAL",
         }
+
+    # Function returns type of the given input, using regex
+    # Returned value may be number ,identifier or type from the given list above  .
+
+
     def get_type(self):
         temp = re.search('-?\d+\.?\d*', self.token)
         if temp != None:

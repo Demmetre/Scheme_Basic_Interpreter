@@ -16,6 +16,9 @@ def tokenize(chars: str) -> list:
         result = "(quote"+x+")"
     return result.replace('(', ' ( ').replace(')', ' ) ').split()
 
+
+# initially checks braces and terminates in case of a syntax violation  
+
 def checkBraces(s):
     temp = tokenize(s)
     stack = []
@@ -37,6 +40,8 @@ def checkBraces(s):
         return False
     return True 
 
+# starter function
+
 def fun():
     print("Welcome to scheme,(ctrl+D) to exit")
     counter = 0
@@ -49,7 +54,14 @@ def fun():
         lex = Lexer_S()
         tok=lex.lex(s)
         result = Generator(iter(tok))
+
+        # Generates result
+        
         res = result.printResult(data)
+
+        # Defines should not be printed.
+        # In this case program just returns success in a nonterminated entries 
+ 
         if res != "success" :
             print(res)
             

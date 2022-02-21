@@ -1,9 +1,9 @@
 # Scheme_Basic_Interpreter
-Scheme basic interpreter for final project
+Scheme basic interpreter , written in python.
 
 ```
-Testing : python3 tests.py
+To test this program , type in terminal : python3 tests.py
 
-Try on your own : python3 start.py
+To try on your own, type in terminal  : python3 start.py 
 
 

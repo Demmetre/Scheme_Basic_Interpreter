@@ -5,8 +5,13 @@ from mainGen import Generator
 
 testsDict = {}
 
+# Functions below are for testing
+# You can add new tests or try online input
+
+
+
+
 def testsOnlyNums():
-    print("Testing on numbers...")
     testsDict["5"] = "5"
     testsDict["-2.1"] = "-2.1"
     testsDict["12/2"] = "6"
@@ -140,6 +145,10 @@ def fun():
     testListFuncs()
     testLocalFuncs()
     testEasyFuncs()
+
+    # Segment below prints results of the tests
+    # In the case of a successful trial it prints SUCCESS !!!, otherwise FAILED!!!
+
     for x in testsDict :
         counter = counter +1
         if not(checkBraces(x)) :
