@@ -55,6 +55,9 @@ class Procedure:
         elif next_token.get_type() == "NUMBER" :
             print("invalid type of expression -> " + next_token.token + " is a number")
             return 0
+        elif next_token.token == "list":
+            temp = self.getArgs()
+            return temp
         elif next_token.token == "cond" :
             res = self.parse_cond()
             return res
@@ -84,10 +87,12 @@ class Procedure:
                 print("No matching syntax rule, no declaration seen for " + next_token.token)
                 return
             a = self.getArgs()
+            # print(a)
             func = self.data[next_token.token]
+            peek = self.peek()
             # print(func(a))
             r = func(a)
-            # print(r)
+            self.next_token()
             return r
         elif next_token.token == "length" :
             peek = self.peek()
@@ -234,6 +239,7 @@ class Procedure:
             proc = Procedure(foo, args, lst, self.data)
             return proc.parse_expression()
         self.next_token()
+        peek = self.peek()
         return tempFunc
 
     def relation(self):
@@ -295,9 +301,10 @@ class Procedure:
                 temp = self.parse_expression()
                 # self.next_token()
                 peek = self.peek()
-                if peek.token == ")":
-                    self.next_token()
-                    peek = self.peek()
+                # if peek.token == ")" :
+                #     self.next_token()
+                #     peek = self.peek()
+
                 res.append(temp)
             elif peek.get_type() == "IDENTIFIER":
                 temp = None
@@ -481,8 +488,8 @@ class Procedure:
         if peek.get_type() == "IDENTIFIER":
             lst= self.getArgs()
         elif peek.token == "(":
-            self.next_token()
-            lst = self.parse_expression()
+            # self.next_token()
+            lst = self.getArgs()
         else :
             print("invalid identifer")
         size = len(lst[0])
@@ -779,8 +786,10 @@ class Procedure:
             elem  = self.args[self.names.get(peek.token)]
         else :
             return 
-        self.next_token() 
         peek = self.peek()
+        if peek.token == ")":
+            self.next_token()
+            peek = self.peek() 
         if not(isinstance(elem, NUMBER)):
             return
         if peek == None :
@@ -865,7 +874,7 @@ class Procedure:
                 self.next_token()
                 peek = self.peek()
                 res*=self.parse_expression(data,False)
-                self.next_token()
+                # self.next_token()
                 peek = self.peek()
             elif peek.get_type() == "NUMBER":
                 res *= self.getNumber(peek.token)
@@ -879,6 +888,7 @@ class Procedure:
             else :
                 print("no matching syntax rule")
                 return
+        self.next_token()
         return res
 
     
@@ -940,4 +950,5 @@ class Procedure:
                 if counter != 0:
                     self.next_token()
                     peek = self.peek()
+        self.next_token()
         return t

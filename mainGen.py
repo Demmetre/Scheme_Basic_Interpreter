@@ -644,6 +644,7 @@ class Generator:
                 counter = counter + 1
             self.next_token()
             peek = self.peek()
+        
         if peek.get_type() != "CLOSE_PAREN":
             return "No matching syntax rule"
         def tempFunc(lst):

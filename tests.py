@@ -87,8 +87,15 @@ def testEasyFuncs():
     testsDict["(filterRange '(1 2 3 4 5 6 7 ) 2 5)"] = [0, 2, 3, 4, 5, 0, 0]
     testsDict["(define (filter lst) (cond ((null? lst) '()) ((> (car lst ) 0) (cons (car lst) (filter (cdr lst)))) ((filter (cdr lst))) ))"] = "success"
     testsDict["(filter (filterRange '(1 2 3 4 5 6 7 ) 2 5))"] = [2, 3, 4, 5]
-
-
+    testsDict["(define (reverse lst) (if (null? lst) '() (append (reverse (cdr lst)) (list (car lst)))))"] = "success"
+    testsDict["(reverse '(1 2 3 4))"] = [4, 3 , 2 ,1]
+    testsDict["(define (pow x y) (if (= y 0) 1 (* x (pow x (- y 1)))))"] = "success"
+    testsDict["(pow 2 4)"] = 16
+    testsDict["(define (generateToNum x) (if (= x 0) '() (append (generateToNum (- x 1) (list x)))))"] = "success"
+    testsDict["(generateToNum 4)"] = [1, 2, 3, 4]
+    testsDict["(define (powersOf x y) (map (lambda (z) (pow x z)) (generateToNum y)))"]= "success"
+    testsDict["(powersOf 2 10)"] = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+    
 def printLex(tok):
     for tok in tok: 
         print(tok.token + " " + " type : " + tok.get_type())
