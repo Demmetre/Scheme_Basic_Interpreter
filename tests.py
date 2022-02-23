@@ -12,8 +12,8 @@ testsDict = {}
 
 
 def testsOnlyNums():
-    testsDict["5"] = "5"
-    testsDict["-2.1"] = "-2.1"
+    testsDict["5"] = 5
+    testsDict["-2.1"] = -2.1
     testsDict["12/2"] = "6"
     testsDict["12/8"] = "3/2"
     testsDict["-19/13"] = "-19/13"
