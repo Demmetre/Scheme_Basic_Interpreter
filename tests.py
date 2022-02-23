@@ -111,6 +111,7 @@ def testEasyFuncs():
     testsDict["(define (intersect a b) (reverse (tempFunc a b '())))"] = "success"
     testsDict["(tempFunc '(0 1 2 3 6 9) '(1 2 4 6 11) '() )"] = [6, 2, 1 ]
     testsDict["(intersect '(1 2 3 4 5 6) '(0 2 3 5 7))"] = [2, 3, 5]
+    testsDict["(intersect '(1 2 2 2) '(1 1 2 2))"] =  [1, 2 , 2]
     testsDict["(intersect '() '(1 1 2 2))"] =  []
 
 def printLex(tok):

@@ -304,21 +304,37 @@ class Generator:
             check = self.parse_expression(data)
             self.next_token()
             peek = self.peek()
-            res = None
-            if peek.get_type() == "NUMBER" :
-                res = self.getNumber(peek.token)
-            elif peek.get_type() == "IDENTIFIER" :
-                res = data.get(peek.token)
-            elif peek.token == "(" :
+            if check:
+                res = None
+                if peek.get_type() == "NUMBER" :
+                    res = self.getNumber(peek.token)
+                    self.next_token()
+                elif peek.get_type() == "IDENTIFIER" :
+                    res = data.get(peek.token)
+                    self.next_token()
+                elif peek.token == "(" :
+                    self.next_token()
+                    res = self.parse_expression(data)
                 self.next_token()
-                res = self.parse_expression(data)
-            self.next_token()
-            self.next_token()
-            peek = self.peek()
-            if res == None:
-                return check
-            if check :
+                peek = self.peek()
+                if peek == None :
+                    return check
                 return res
+            else:
+                c = 1
+                peek = self.peek()
+                while (peek.token != ")" or c != 1):
+                    if peek.token == "(" :
+                        c = c+1
+                    elif peek.token == ")":
+                        c = c - 1
+                    self.next_token()
+                    peek = self.peek()
+                peek = self.peek()
+                self.next_token()
+                peek = self.peek()
+                if peek == None :
+                    return check
 
     # returns two values for a comparison funtion
     # ex: for (> 5 6),  5 and 6 should be returned
