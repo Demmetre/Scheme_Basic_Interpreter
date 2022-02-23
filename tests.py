@@ -107,6 +107,11 @@ def testEasyFuncs():
     testsDict["(factorial 5)"] = 120
     testsDict["(define (sumOfDigits n) (if (= n 0) 0 (+ (mod n 10) (sumOfDigits (/ (- n (mod n 10)) 10)))))"] = "success"
     testsDict["(sumOfDigits 1234)"] = 10
+    testsDict["(define (tempFunc a b res)(cond ((null? a) res) ((null? b) res) ((= (car a) (car b)) (tempFunc (cdr a) (cdr b) (cons (car a) res))) ((> (car a) (car b) ) (tempFunc a (cdr b) res)) ((tempFunc (cdr a) b res))))"] = "success"
+    testsDict["(define (intersect a b) (reverse (tempFunc a b '())))"] = "success"
+    testsDict["(tempFunc '(0 1 2 3 6 9) '(1 2 4 6 11) '() )"] = [6, 2, 1 ]
+    testsDict["(intersect '(1 2 3 4 5 6) '(0 2 3 5 7))"] = [2, 3, 5]
+    testsDict["(intersect '() '(1 1 2 2))"] =  []
 
 def printLex(tok):
     for tok in tok: 
