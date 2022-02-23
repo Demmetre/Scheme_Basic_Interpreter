@@ -39,7 +39,7 @@ class Generator:
             return None
 
 
-    # returns list of arguments, when the function is called
+    # returns the list of arguments, when the function is called
 
     def getArgs(self,data) :
         res = []
@@ -69,6 +69,11 @@ class Generator:
             peek = self.peek()
         return res
     
+
+    # returns result of a modular expression. 
+    # function takes two arguments.
+    # ex : (mod 5 3)  equals to 2
+
     def parse_mod(self, data):
         peek= self.peek()
         first = None
@@ -100,6 +105,9 @@ class Generator:
         self.next_token()
         return first%second
     
+    # parses expression inside of the braces and calls other funtions if needed
+    # ex: (...)
+
     def parse_expression(self,data,flag = True):
         next_token = self.next_token()
         if next_token == None :
@@ -162,6 +170,10 @@ class Generator:
                 return "No matching syntax rule "
             return  0
         elif next_token.get_type() == "OPEN_PAREN" :
+
+            # this segment is for local lambda calls 
+            # also, it can calculate nested lambdas 
+
             peek = self.peek()
             if peek.token == "(" :
                 func = self.parse_expression(data)
@@ -269,6 +281,9 @@ class Generator:
             return y  
         return 0
 
+    # parses condition statement in scheme and recursively calls parse expression if needed
+    # ex:(cond ((< x 1) 1) ((< x 5) 5) (10))
+
     def parse_cond(self,data):
         peek = self.peek()
         while peek.token != ")":
@@ -305,6 +320,9 @@ class Generator:
             if check :
                 return res
 
+    # returns two values for a comparison funtion
+    # ex: for (> 5 6),  5 and 6 should be returned
+
     def relation(self,data):
         peek = self.peek()
         first = None
@@ -339,6 +357,9 @@ class Generator:
             return "number expected , got other"
         return first,second     
 
+    # Funtions takes two arguments and a potential function
+    # It returns result of them
+    # Used for apply and map
 
     def getOp(self,ope,x , y,data):
         if ope.token == "min" :
@@ -365,7 +386,11 @@ class Generator:
             tss = [x ,y]
             return func(tss)
         return "invalid type"
-            
+
+    # parses function apply in scheme , it may take other function, defined above, 
+    # and should return result for this function.
+    # ex:(apply + ...), (apply min ...) 
+
     def parse_apply(self,data):
         peek = self.peek()
         operator = peek
@@ -379,6 +404,8 @@ class Generator:
         for index in range(1,size ) :
             curr = self.getOp(operator,curr,lst[index],data)
         return curr
+
+    # parses null?
 
     def parse_null(self,data):
         peek = self.peek()
@@ -406,6 +433,11 @@ class Generator:
         if type(temp) == list and len(temp)== 0 :
             return True
         return False
+
+    # parses map and returns result
+    # it may take lambda function, + - or funtions defined above.
+    # you can call map for many lists at a time.
+    # ex:(map (lambda (x y) (+ x y)) '(1 2 3) '(4 5 6)) should return [5 , 7 , 9]
 
     def parse_map(self,data):
         peek = self.peek()
@@ -485,7 +517,8 @@ class Generator:
             result.append(tempfunc(tempppp))
         return result
             
-        
+    # parses append and calls recursively parse_expression if needed
+    # returns extended lists    
 
     def parse_append(self,data):
         peek = self.peek()
@@ -531,6 +564,7 @@ class Generator:
             return "unexpected token"
         ls.extend(ls2)
         return ls
+
 
     def parse_cdr(self,data):
         peek = self.peek()
@@ -630,6 +664,8 @@ class Generator:
         ls.insert(0, elem) 
         return ls
 
+    # returns list described like '(1 2 3)
+
     def par_list(self) :
         peek = self.next_token()
         args = []
@@ -644,6 +680,8 @@ class Generator:
             peek = self.next_token()
         
         return args
+
+    # returns function defined with lambda, it may save described funtion in the map or return as a funtion without saving
 
 
     def parse_lambda_func(self, name, funcs,flag = True):
@@ -694,7 +732,8 @@ class Generator:
         else:
             return tempFunc
 
-        
+    # saves function with a specific name in the map 
+
     def parseFunctionDefine(self,funcs):
         self.next_token()
         name = self.next_token().token
@@ -860,7 +899,8 @@ class Generator:
 
         return t
         
-
+    # main funtion, wich calls other functions including parse_expression
+    # it may return number , list or error as a string
 
     def printResult(self,funcNums,flag = False):
         current = self.next_token()

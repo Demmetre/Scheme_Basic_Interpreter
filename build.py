@@ -11,6 +11,11 @@ ELEMENT= (int,float,str)
 NUMBER = (int , float)
 class Procedure:
 
+
+    # This class has almost same logic described in mainGen.py
+    # Difference is that, it saves functions and its argumens in map, so it may seem different
+    # It recplaces argument names and takes its values 
+
     def __init__(self,string,names,args,data):
         self.data = data
         self.string = string
