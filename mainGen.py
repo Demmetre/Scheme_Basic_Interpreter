@@ -69,7 +69,36 @@ class Generator:
             peek = self.peek()
         return res
     
-
+    def parse_mod(self, data):
+        peek= self.peek()
+        first = None
+        second = None
+        if peek.get_type() == "NUMBER" :
+            first = self.getNumber(peek.token)
+            self.next_token()
+        elif peek.get_type() == "IDENTIFIER":
+            first = data.get(peek.token)
+            self.next_token()
+        elif peek.token == "(":
+            self.next_token()
+            first = self.parse_expression(data)
+        peek = self.peek()
+        if peek.get_type() == "NUMBER" :
+            second = self.getNumber(peek.token)
+            self.next_token()
+        elif peek.get_type() == "IDENTIFIER":
+            second = data.get(peek.token)
+            self.next_token()
+        elif peek.token == "(":
+            self.next_token()
+            second = self.parse_expression(data)
+        if not(isinstance(first,NUMBER)) or not(isinstance(second,NUMBER)):
+            return "no matching syntax rule"
+        peek = self.peek()
+        if peek.token != ")":
+            return "no matching syntax rule"
+        self.next_token()
+        return first%second
     
     def parse_expression(self,data,flag = True):
         next_token = self.next_token()
@@ -80,6 +109,9 @@ class Generator:
         elif next_token.token == "cond":
             res = self.parse_cond(data)
             self.next_token()
+            return res
+        elif next_token.token == "mod":
+            res = self.parse_mod(data)
             return res
         elif next_token.get_type() == "IDENTIFIER" :
             if data.get(next_token.token,"NONE") == "NONE"  :
@@ -836,8 +868,8 @@ class Generator:
             return
         peek = self.peek()
         if current.get_type() == "NUMBER" :
-            if peek == None :
-                return current.token
+            if peek == None or peek.token==")":
+                return self.getNumber(current.token)
             else :
                 if peek.get_type() == "DIVISION" :
                     self.next_token()
@@ -854,6 +886,7 @@ class Generator:
                     a = self.getNumber(current.token)
                     b = self.getNumber(peekk.token)
                     t = math.gcd(a, b)
+                    # self.next_token()
                     if(t == b) :
                         return str(int(a/t))
                     else  : 

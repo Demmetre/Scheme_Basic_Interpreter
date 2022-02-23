@@ -44,6 +44,41 @@ class Procedure:
         except :
             return float(token)
 
+
+    def parse_mod(self, data):
+        peek= self.peek()
+        first = None
+        second = None
+        if peek.get_type() == "NUMBER" :
+            first = self.getNumber(peek.token)
+            self.next_token()
+        elif peek.get_type() == "IDENTIFIER":
+            first = self.args[self.names.get(peek.token)]
+            self.next_token()
+        elif peek.token == "(":
+            self.next_token()
+            first = self.parse_expression(data)
+        peek = self.peek()
+        if peek.get_type() == "NUMBER" :
+            second = self.getNumber(peek.token)
+            self.next_token()
+        elif peek.get_type() == "IDENTIFIER":
+            second = self.args[self.names.get(peek.token)]
+            self.next_token()
+        elif peek.token == "(":
+            self.next_token()
+            second = self.parse_expression(data)
+        if not(isinstance(first,NUMBER)) or not(isinstance(second,NUMBER)):
+            return "no matching syntax rule"
+        peek = self.peek()
+        if peek.token != ")":
+            return "no matching syntax rule"
+        self.next_token()
+        return first%second
+
+
+
+
     def parse_expression(self,data = None,flag = False):
         if self.names.__len__() != self.args.__len__() :
             print("invalid number of arguments")
@@ -55,6 +90,9 @@ class Procedure:
         elif next_token.get_type() == "NUMBER" :
             print("invalid type of expression -> " + next_token.token + " is a number")
             return 0
+        elif next_token.token  == "mod":
+            res = self.parse_mod(self)
+            return res 
         elif next_token.token == "list":
             temp = self.getArgs()
             return temp
@@ -916,7 +954,7 @@ class Procedure:
                 self.next_token()
                 peek = self.peek()
                 t+= self.parse_expression(data)
-                self.next_token()
+                # self.next_token()
                 peek = self.peek()
             elif peek.get_type() == "NUMBER":
                 t += self.getNumber(peek.token)

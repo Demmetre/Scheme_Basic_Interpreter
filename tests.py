@@ -57,6 +57,7 @@ def testListFuncs():
     testsDict["(map (lambda (x y) (append (cdr x) (cdr y))) '((1 2 3) (3 4 5)) '((1 2 3) (3 4 5)))"] = [[2, 3, 2, 3], [4, 5, 4, 5]]
     testsDict["(map (lambda (x) (if(> x 2) 0 x)) '(1 2 3 4))"] = [1, 2, 0, 0]
     testsDict["(append (cons 1 '(2 3)) (cdr '(3 4 5)))"] = [1, 2, 3, 4, 5]
+    testsDict["(map (lambda (x) (* 2 x)) (map (lambda (x) (+ x 1)) '(1 2 3)))"] = [4, 6, 8]
 
 def testLocalFuncs():
     testsDict["(eval (+ 6 6))"] = 12
@@ -100,7 +101,13 @@ def testEasyFuncs():
     testsDict["(generateToNum 4)"] = [1, 2, 3, 4]
     testsDict["(define (powersOf x y) (map (lambda (z) (pow x z)) (generateToNum y)))"]= "success"
     testsDict["(powersOf 2 10)"] = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
-    
+    testsDict["(map sum '(1 2 3) '(1 2 3))"] = [2,4,6]
+    testsDict["(define (factorial x) (if (= x 0) 1 (* x (factorial (- x 1)))))"] = "success"
+    testsDict["(factorial 4)"] = 24
+    testsDict["(factorial 5)"] = 120
+    testsDict["(define (sumOfDigits n) (if (= n 0) 0 (+ (mod n 10) (sumOfDigits (/ (- n (mod n 10)) 10)))))"] = "success"
+    testsDict["(sumOfDigits 1234)"] = 10
+
 def printLex(tok):
     for tok in tok: 
         print(tok.token + " " + " type : " + tok.get_type())
