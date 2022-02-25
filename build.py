@@ -508,9 +508,20 @@ class Procedure:
                     foo.append(peek)
                 else :
                     tok = self.args[self.names.get(peek.token)]
-                    temptoken = Tokens(str(tok))
-                    temptoken.get_type()
-                    foo.append(temptoken)
+                    temptoken =  None
+                    if type(tok) != list:
+                        temptoken = Tokens(str(tok))
+                        temptoken.get_type()
+                        foo.append(temptoken)
+                    else :
+                        temptoken = "'("
+                        for tempelem in tok :
+                            temptoken = temptoken + str(tempelem)
+                        temptoken = temptoken + ")"
+                        for elem in temptoken:
+                            tempStr = Tokens(elem)
+                            tempStr.get_type()
+                            foo.append(tempStr)
                 if peek.get_type() == "CLOSE_PAREN" :
                     counter = counter - 1
                     if counter == 0 :
@@ -729,6 +740,7 @@ class Procedure:
         else :
             print("unexpected token")
             return
+
         peek = self.peek()
         if peek == None :
             print("unexpected token")
@@ -798,7 +810,7 @@ class Procedure:
             ls = self.parse_expression()
         elif peek.token == "'" :
             self.next_token()
-            ls = self.par_list()
+            ls = self.par_list()[0]
         elif peek.get_type() == "IDENTIFIER" :
             elem = self.args[self.names.get(peek.token)]
             if type(elem) != list :
@@ -811,7 +823,7 @@ class Procedure:
             print("unexpected token")
             return     
         res = ls[0]
-        self.next_token()
+        peek = self.peek()
         return res
 
     def parse_cons(self,p):
@@ -826,8 +838,10 @@ class Procedure:
             elem = self.parse_expression()
         elif peek.get_type() == "NUMBER":
             elem  = self.getNumber(peek.token)
+            self.next_token()
         elif peek.get_type() == "IDENTIFIER" :
             elem  = self.args[self.names.get(peek.token)]
+            self.next_token()
         else :
             return 
         peek = self.peek()
@@ -856,7 +870,7 @@ class Procedure:
             return
         
         ls.insert(0, elem)
-        self.next_token()
+        # self.next_token()
         return ls
 
     def par_list(self) :

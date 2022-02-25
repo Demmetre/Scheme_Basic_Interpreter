@@ -113,6 +113,10 @@ def testEasyFuncs():
     testsDict["(intersect '(1 2 3 4 5 6) '(0 2 3 5 7))"] = [2, 3, 5]
     testsDict["(intersect '(1 2 2 2) '(1 1 2 2))"] =  [1, 2 , 2]
     testsDict["(intersect '() '(1 1 2 2))"] =  []
+    testsDict["(define (generateSubsets lst) (if (null? lst) '(()) (append (generateSubsets (cdr lst)) (map (lambda (x) (cons (car lst) x)) (generateSubsets (cdr lst))))))"] = "success"
+    testsDict["(generateSubsets '(1 2 3))"] = [[], [3], [2], [2, 3], [1], [1, 3], [1, 2], [1, 2, 3]]
+    testsDict["(generateSubsets '(1 2))"] = [[], [2], [1], [1, 2]]
+
 
 def printLex(tok):
     for tok in tok: 
