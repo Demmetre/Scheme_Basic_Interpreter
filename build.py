@@ -167,24 +167,31 @@ class Procedure:
             return self.parse_null()
         elif next_token.token == "and" :
             first ,second = self.relation()
+            self.next_token()
             return first and second
         elif next_token.token == "or" :
             first ,second = self.relation()
+            self.next_token()
             return first or second
         elif next_token.token == ">" :
             x,y = self.relation()
+            self.next_token()
             return x>y
         elif next_token.token == "<" :
             x,y = self.relation()
+            self.next_token()
             return x < y
         elif next_token.token == ">=" :
             x,y = self.relation()
+            self.next_token()
             return x >= y
         elif next_token.token == "<=" :
             x,y = self.relation()
+            self.next_token()
             return x <= y
         elif next_token.token == "=" :
             x,y = self.relation()
+            self.next_token()
             return x == y
         return 0
 
@@ -198,15 +205,20 @@ class Procedure:
             peek = self.peek()
             if peek.get_type() == "NUMBER" :
                 check = self.getNumber(peek.token)
+                self.next_token()
                 return check
             elif peek.get_type() == "IDENTIFIER" :
                 check = self.args[self.names.get(peek.token)]
+                self.next_token()
                 return check
             if peek.token != "(":
                 return "unexpected token"
             self.next_token()
+            peek = self.peek()
+            # print(peek.token)
             check = self.parse_expression()
-            self.next_token()
+            if not(isinstance(check, bool)) :
+                return check
             peek = self.peek()
             if check : 
                 res = None
@@ -218,6 +230,7 @@ class Procedure:
                     self.next_token()
                 elif peek.token == "(" :
                     self.next_token()
+                    peek=self.peek()
                     res = self.parse_expression()
                 elif peek.token == "'":
                     self.next_token()
@@ -317,14 +330,13 @@ class Procedure:
         elif peek.token == "(":
             self.next_token()
             first = self.parse_expression()
-            self.next_token()
+            # self.next_token()
             peek = self.peek()
         else :
             return "invalid type of exression"
         if not(isinstance(first,NUMBER)):
             return "number expected , got other"
         peek = self.peek()
-
         if peek.get_type() == "NUMBER":
             second = self.getNumber(peek.token)
             self.next_token()
@@ -340,11 +352,12 @@ class Procedure:
         elif peek.token == "(":
             self.next_token()
             second = self.parse_expression()
-            self.next_token()
+            # self.next_token()
         else :
             return "invalid type of exression"
         if not(isinstance(second,NUMBER)):
             return "number expected , got other"
+        peek = self.peek()
         return first,second     
 
 
@@ -354,8 +367,9 @@ class Procedure:
         while peek!= None and peek.get_type() != "CLOSE_PAREN" :
             if peek.token == "(":
                 self.next_token()
-                temp = self.parse_expression()
                 peek = self.peek()
+                temp = self.parse_expression()
+                # peek = self.peek()
                 res.append(temp)
             elif peek.get_type() == "IDENTIFIER":
                 temp = None
@@ -417,6 +431,7 @@ class Procedure:
             lst = self.parse_expression()
         else :    
             lst = self.getArgs()[0]
+        peek = self.peek()
         size =lst.__len__()
         if size == 0 :
             return []
@@ -425,6 +440,7 @@ class Procedure:
         for index in range(1,size) :
                 curr = self.getOp(operator,curr,lst[index])
         self.next_token()
+        peek = self.peek()
         return curr
 
     def parse_map(self):
@@ -611,6 +627,7 @@ class Procedure:
         if peek.get_type() == "IDENTIFIER":
             self.next_token()
             temp = self.args[self.names.get(peek.token)]
+            self.next_token()
         elif peek.token == "(":
             self.next_token()
             temp = self.parse_expression()
@@ -622,6 +639,7 @@ class Procedure:
             return
         if type(temp) == list and len(temp)== 0 :
             return True
+        self.next_token()
         return False
 
     def tmpIf(self):
@@ -679,20 +697,9 @@ class Procedure:
     def parse_if(self,data,flag):
 
         tempCheck = self.parse_fullCond(data,flag)
-        peek = self.peek()
         if tempCheck:
-            peek = self.peek()
-            if peek.token != ")":
-                print("invalid character")
-                return
-            self.next_token()
             return self.tmpIf()
         else :
-            peek = self.peek()
-            if peek.token != ")":
-                print("invalid character")
-                return
-            self.next_token()
             peek = self.peek()
             flag = True
             if peek.token == "(" :
@@ -719,6 +726,7 @@ class Procedure:
     def parse_append(self,p):
         peek = self.peek()
         if peek == None :
+
             print("unexpected token")
             return
         ls = []
@@ -740,8 +748,10 @@ class Procedure:
         else :
             print("unexpected token")
             return
-
         peek = self.peek()
+        # if peek.token == ")":
+        #     self.next_token()
+        #     peek = self.peek()
         if peek == None :
             print("unexpected token")
             return
@@ -798,6 +808,7 @@ class Procedure:
 
 
 
+
     def parse_car(self,p):
         peek = self.peek()
         if peek == None :
@@ -811,6 +822,7 @@ class Procedure:
         elif peek.token == "'" :
             self.next_token()
             ls = self.par_list()[0]
+
         elif peek.get_type() == "IDENTIFIER" :
             elem = self.args[self.names.get(peek.token)]
             if type(elem) != list :
@@ -818,12 +830,13 @@ class Procedure:
                 return
             ls = elem
             self.next_token()
+            self.next_token()
+            peek = self.peek()
             return ls[0] 
         else :
             print("unexpected token")
-            return     
+            return   
         res = ls[0]
-        peek = self.peek()
         return res
 
     def parse_cons(self,p):
@@ -843,11 +856,9 @@ class Procedure:
             elem  = self.args[self.names.get(peek.token)]
             self.next_token()
         else :
-            return 
+            return
         peek = self.peek()
-        if peek.token == ")":
-            self.next_token()
-            peek = self.peek() 
+        # print(elem)
         if not(isinstance(elem, NUMBER)):
             return
         if peek == None :
@@ -856,7 +867,6 @@ class Procedure:
         ls = []
         if peek.token == "(" :
             self.next_token()
-            peek = self.peek()
             ls = self.parse_expression()
         elif peek.token == "'" :
             self.next_token()
@@ -870,7 +880,7 @@ class Procedure:
             return
         
         ls.insert(0, elem)
-        # self.next_token()
+        self.next_token()
         return ls
 
     def par_list(self) :
@@ -894,13 +904,14 @@ class Procedure:
         res = None
         if peek.get_type() == "IDENTIFIER" :
             elem = self.args[self.names.get(peek.token)]
+            self.next_token()
             res = elem
         elif peek.token == "(" :
             self.next_token()
             res = self.parse_expression()
         else:
             res = self.getNumber(peek.token)
-        self.next_token()
+            self.next_token()
         peek = self.peek()
         temp = 1
         while peek != None and peek.get_type()!="CLOSE_PAREN" :
@@ -979,6 +990,7 @@ class Procedure:
             else :
                 print("no matching syntax rule")
                 return 0
+        self.next_token()
         return res
 
     def parseAddition(self,data,p):

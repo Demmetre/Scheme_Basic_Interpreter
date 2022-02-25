@@ -74,7 +74,7 @@ def testEasyFuncs():
     testsDict["(sum 5 6)"] = 11
     testsDict["(define foo (lambda (x y) (+ (car x) (car y))))"] = "success"
     testsDict["(foo '(2 9 7) '(3 6 4))"] = 5
-    testsDict["(define (contains x y) (> (apply + (map (lambda (y) (if (= x y) 1 0) y))) 0))"] = "success"
+    testsDict["(define (contains x y) (> (apply + (map (lambda (y) (if (= x y) 1 0)) y)) 0))"] = "success"
     testsDict["(contains 1 '(1 2 3) )"] = True
     testsDict["(contains 0 '(1 2 3 9) )"] = False
     testsDict["(if (contains 9 '(1 2 3 9)) ((lambda (x y z) (* x y z)) 1 2 3) 1)"] = 6
@@ -97,7 +97,7 @@ def testEasyFuncs():
     testsDict["(reverse '(1 2 3 4))"] = [4, 3 , 2 ,1]
     testsDict["(define (pow x y) (if (= y 0) 1 (* x (pow x (- y 1)))))"] = "success"
     testsDict["(pow 2 4)"] = 16
-    testsDict["(define (generateToNum x) (if (= x 0) '() (append (generateToNum (- x 1) (list x)))))"] = "success"
+    testsDict["(define (generateToNum x) (if (= x 0) '() (append (generateToNum (- x 1)) (list x))))"] = "success"
     testsDict["(generateToNum 4)"] = [1, 2, 3, 4]
     testsDict["(define (powersOf x y) (map (lambda (z) (pow x z)) (generateToNum y)))"]= "success"
     testsDict["(powersOf 2 10)"] = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
@@ -116,7 +116,12 @@ def testEasyFuncs():
     testsDict["(define (generateSubsets lst) (if (null? lst) '(()) (append (generateSubsets (cdr lst)) (map (lambda (x) (cons (car lst) x)) (generateSubsets (cdr lst))))))"] = "success"
     testsDict["(generateSubsets '(1 2 3))"] = [[], [3], [2], [2, 3], [1], [1, 3], [1, 2], [1, 2, 3]]
     testsDict["(generateSubsets '(1 2))"] = [[], [2], [1], [1, 2]]
-
+    testsDict["(define (ksubset lst k) (cond  ((> k (length lst)) '()) ((= k 0) '(())) ((append (map (lambda (x) (cons (car lst) x)) (ksubset (cdr lst) (- k 1))) (ksubset (cdr lst) k)))))"] = "success"
+    testsDict[" (ksubset '(1 2 3 4) 2) "] = [[1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]]
+    testsDict["(define (count n lst) (apply + (map (lambda (x) (if (= x n) 1 0)) lst)))"] = "success"
+    testsDict["(count 5 '(1 5 3 4 5))"] = 2
+    testsDict["(define (set lst) (cond ((null? lst) '()) ((= 1 (count (car lst) lst)) (cons (car lst) (set (cdr lst)))) ( (set (cdr lst)))))"] = "success"
+    testsDict["(set '(1 1 1 2 2 2 3 3 5 6 9 9))"] =  [1, 2, 3, 5, 6, 9]
 
 def printLex(tok):
     for tok in tok: 
