@@ -1,4 +1,3 @@
-
 import math
 import re
 import sys
@@ -114,6 +113,30 @@ class Generator:
             return "No matching syntax rule"
         if next_token.get_type() == "NUMBER" :
             return "invalid type of expression -> " + next_token.token + " is a number"
+        elif next_token.token == "caar":
+            return self.parse_caar(data)
+        elif next_token.token == "cadr":
+            return self.parse_cadr(data)
+        elif next_token.token == "cdar":
+            return self.parse_cdar(data)
+        elif next_token.token == "cddr":
+            return self.parse_cddr(data)
+        elif next_token.token == "caaar":
+            return self.parse_caaar(data)
+        elif next_token.token == "caadr":
+            return self.parse_caadr(data)
+        elif next_token.token == "cadar":
+            return self.parse_cadar(data)
+        elif next_token.token == "cdaar":
+            return self.parse_cdaar(data)
+        elif next_token.token == "cddar":
+            return self.parse_cddar(data)
+        elif next_token.token == "caddr":
+            return self.parse_caddr(data)
+        elif next_token.token == "cdadr":
+            return self.parse_cdadr(data)
+        elif next_token.token == "cdddr":
+            return self.parse_cdddr(data)
         elif next_token.token == "cond":
             res = self.parse_cond(data)
             self.next_token()
@@ -280,6 +303,96 @@ class Generator:
                 return x
             return y  
         return 0
+
+    def parse_caar(self,data):
+        elem = self.parse_car(data)
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        return elem[0]
+
+    def parse_cadr(self,data):
+        elem = self.parse_cdr(data)
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        return elem[0]
+
+    def parse_cdar(self,data):
+        elem = self.parse_car(data)
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        return elem[1:]
+
+    def parse_cddr(self,data):
+        elem = self.parse_cdr(data)
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        return elem[1:]
+
+    def parse_caaar(self,data):
+        elem = self.parse_car(data)
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        elem = elem[0]
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        return elem[0]
+
+    def parse_caadr(self,data):
+        elem = self.parse_cdr(data)
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        elem = elem[0]
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        return elem[0]
+
+    def parse_cadar(self,data):
+        elem = self.parse_car(data)
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        elem = elem[1:]
+        return elem[0]
+
+    def parse_cdaar(self,data):
+        elem = self.parse_car(data)
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        elem = elem[0]
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        return elem[1:]
+
+    def parse_caddr(self,data):
+        elem = self.parse_cdr(data)
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        elem = elem[1:]
+        return elem[0]
+
+
+    def parse_cddar(self,data):
+        elem = self.parse_car(data)
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        elem = elem[1:]
+        return elem[1:]
+
+    def parse_cdadr(self,data):
+        elem = self.parse_cdr(data)
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        elem = elem[0]
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        return elem[1:]
+
+    def parse_cdddr(self,data):
+        elem = self.parse_cdr(data)
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        elem = elem[1:]
+        return elem[1:]
+
 
     # parses condition statement in scheme and recursively calls parse expression if needed
     # ex:(cond ((< x 1) 1) ((< x 5) 5) (10))
@@ -977,9 +1090,9 @@ class Generator:
             self.next_token()
             return rees
         elif current.get_type() == "FALSE":
-            return "#f"
+            return True
         elif current.get_type() == "TRUE":
-            return "#t"
+            return False
         else:
             if current.token == '*':
                 return "<procedure *>"

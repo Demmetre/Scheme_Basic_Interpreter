@@ -58,6 +58,7 @@ def testListFuncs():
     testsDict["(map (lambda (x) (if(> x 2) 0 x)) '(1 2 3 4))"] = [1, 2, 0, 0]
     testsDict["(append (cons 1 '(2 3)) (cdr '(3 4 5)))"] = [1, 2, 3, 4, 5]
     testsDict["(map (lambda (x) (* 2 x)) (map (lambda (x) (+ x 1)) '(1 2 3)))"] = [4, 6, 8]
+    testsDict["(cadr (map (lambda (x) (apply + x)) '((1 2 3 4) (5 6 7 8)) ))"] = 26
 
 def testLocalFuncs():
     testsDict["(eval (+ 6 6))"] = 12
@@ -122,6 +123,12 @@ def testEasyFuncs():
     testsDict["(count 5 '(1 5 3 4 5))"] = 2
     testsDict["(define (set lst) (cond ((null? lst) '()) ((= 1 (count (car lst) lst)) (cons (car lst) (set (cdr lst)))) ( (set (cdr lst)))))"] = "success"
     testsDict["(set '(1 1 1 2 2 2 3 3 5 6 9 9))"] =  [1, 2, 3, 5, 6, 9]
+    testsDict["(define (frequency lst) (map (lambda (x) (list x (count x lst))) (set lst)))"] = "success"
+    testsDict["(frequency '(1 2 2 2 3 3 9 9 9 ))"] = [[1, 1], [2, 3], [3, 2], [9, 3]]
+    testsDict["(define (multi n elem) (if (= n 0) '() (cons elem (multi (- n 1) elem))))"] = "success"
+    testsDict["(multi 3 4)"] = [4, 4, 4]
+    testsDict["(define (multiply n lst) (apply append (map (lambda (x) (multi n x)) lst)))"] = "success"
+    testsDict["(multiply 2 '(1 2 3 4))"] = [1, 1, 2, 2, 3, 3, 4, 4]
 
 def printLex(tok):
     for tok in tok: 

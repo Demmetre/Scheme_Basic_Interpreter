@@ -95,6 +95,30 @@ class Procedure:
         elif next_token.get_type() == "NUMBER" :
             print("invalid type of expression -> " + next_token.token + " is a number")
             return 0
+        elif next_token.token == "caar":
+            return self.parse_caar()
+        elif next_token.token == "cadr":
+            return self.parse_cadr()
+        elif next_token.token == "cdar":
+            return self.parse_cdar()
+        elif next_token.token == "cddr":
+            return self.parse_cddr()
+        elif next_token.token == "caaar":
+            return self.parse_caaar()
+        elif next_token.token == "caadr":
+            return self.parse_caadr()
+        elif next_token.token == "cadar":
+            return self.parse_cadar()
+        elif next_token.token == "cdaar":
+            return self.parse_cdaar()
+        elif next_token.token == "cddar":
+            return self.parse_cddar()
+        elif next_token.token == "caddr":
+            return self.parse_caddr()
+        elif next_token.token == "cdadr":
+            return self.parse_cdadr()
+        elif next_token.token == "cdddr":
+            return self.parse_cdddr()
         elif next_token.token  == "mod":
             res = self.parse_mod(self)
             return res 
@@ -115,13 +139,13 @@ class Procedure:
         elif next_token.get_type() == "DIVISION" :
             return self.parseDivision(data,flag)
         elif next_token.get_type() == "APPEND" :
-            return self.parse_append(flag) 
+            return self.parse_append() 
         elif next_token.get_type() == "CAR" :
-            return self.parse_car(flag)
+            return self.parse_car()
         elif next_token.get_type() == "CONS" :
-            return self.parse_cons(flag)
+            return self.parse_cons()
         elif next_token.get_type() == "CDR" :
-            return  self.parse_cdr(flag)
+            return  self.parse_cdr()
         elif next_token.get_type() == "MAP" :
             res=  self.parse_map()
             return res
@@ -194,6 +218,95 @@ class Procedure:
             self.next_token()
             return x == y
         return 0
+
+    def parse_caar(self):
+        elem = self.parse_car()
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        return elem[0]
+
+    def parse_cadr(self):
+        elem = self.parse_cdr()
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        return elem[0]
+
+    def parse_cdar(self):
+        elem = self.parse_car()
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        return elem[1:]
+
+    def parse_cddr(self):
+        elem = self.parse_cdr()
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        return elem[1:]
+
+    def parse_caaar(self):
+        elem = self.parse_car()
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        elem = elem[0]
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        return elem[0]
+
+    def parse_caadr(self):
+        elem = self.parse_cdr()
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        elem = elem[0]
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        return elem[0]
+
+    def parse_cadar(self):
+        elem = self.parse_car()
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        elem = elem[1:]
+        return elem[0]
+
+    def parse_cdaar(self):
+        elem = self.parse_car()
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        elem = elem[0]
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        return elem[1:]
+
+    def parse_caddr(self):
+        elem = self.parse_cdr()
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        elem = elem[1:]
+        return elem[0]
+
+
+    def parse_cddar(self):
+        elem = self.parse_car()
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        elem = elem[1:]
+        return elem[1:]
+
+    def parse_cdadr(self):
+        elem = self.parse_cdr()
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        elem = elem[0]
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        return elem[1:]
+
+    def parse_cdddr(self):
+        elem = self.parse_cdr()
+        if type(elem)!= list :
+            return "invalid argument, expected list"
+        elem = elem[1:]
+        return elem[1:]
 
     def parse_cond(self):
         peek = self.peek()
@@ -723,7 +836,7 @@ class Procedure:
             peek = self.peek()
             return self.tmpIf()
 
-    def parse_append(self,p):
+    def parse_append(self):
         peek = self.peek()
         if peek == None :
 
@@ -778,7 +891,7 @@ class Procedure:
         self.next_token()
         return ls
 
-    def parse_cdr(self,p):
+    def parse_cdr(self):
         peek = self.peek()
         if peek == None :
             print("unexpected token")
@@ -809,7 +922,7 @@ class Procedure:
 
 
 
-    def parse_car(self,p):
+    def parse_car(self):
         peek = self.peek()
         if peek == None :
             print("unexpected token")
@@ -839,7 +952,7 @@ class Procedure:
         res = ls[0]
         return res
 
-    def parse_cons(self,p):
+    def parse_cons(self):
         peek = self.peek()
         if peek == None : 
             print("unexpected token")
