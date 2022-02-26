@@ -626,7 +626,6 @@ class Generator:
                 peek = self.peek()
                 if peek.token != ")":
                     return "no matching syntax rule"
-                # self.next_token()
                 peek = self.peek()
                 if peek.token != ")":
                     return "no matching syntax rule"
@@ -1055,7 +1054,6 @@ class Generator:
                     a = self.getNumber(current.token)
                     b = self.getNumber(peekk.token)
                     t = math.gcd(a, b)
-                    # self.next_token()
                     if(t == b) :
                         return str(int(a/t))
                     else  : 

@@ -95,6 +95,7 @@ class Procedure:
         elif next_token.get_type() == "NUMBER" :
             print("invalid type of expression -> " + next_token.token + " is a number")
             return 0
+        # list additional functions 
         elif next_token.token == "caar":
             return self.parse_caar()
         elif next_token.token == "cadr":
@@ -119,6 +120,7 @@ class Procedure:
             return self.parse_cdadr()
         elif next_token.token == "cdddr":
             return self.parse_cdddr()
+        
         elif next_token.token  == "mod":
             res = self.parse_mod(self)
             return res 
@@ -162,7 +164,8 @@ class Procedure:
             peek = self.peek()
             temp = None
             if peek.get_type() == "IDENTIFIER" :
-                temp = self.args.copy()[self.names.get(peek.token)]
+                temp = self.args[self.names.get(peek.token)]
+                self.next_token()
             elif peek.token == "(":
                 self.next_token()
                 temp = self.parse_expression()
@@ -172,7 +175,6 @@ class Procedure:
             if temp == None or type(temp)!= list:
                 print("invalid type of argument")
                 return 
-            self.next_token()
             self.next_token()
             return len(temp)
         elif next_token.token == "lambda" :
@@ -307,6 +309,7 @@ class Procedure:
             return "invalid argument, expected list"
         elem = elem[1:]
         return elem[1:]
+
 
     def parse_cond(self):
         peek = self.peek()
@@ -443,7 +446,6 @@ class Procedure:
         elif peek.token == "(":
             self.next_token()
             first = self.parse_expression()
-            # self.next_token()
             peek = self.peek()
         else :
             return "invalid type of exression"
@@ -465,7 +467,6 @@ class Procedure:
         elif peek.token == "(":
             self.next_token()
             second = self.parse_expression()
-            # self.next_token()
         else :
             return "invalid type of exression"
         if not(isinstance(second,NUMBER)):
@@ -482,7 +483,6 @@ class Procedure:
                 self.next_token()
                 peek = self.peek()
                 temp = self.parse_expression()
-                # peek = self.peek()
                 res.append(temp)
             elif peek.get_type() == "IDENTIFIER":
                 temp = None
@@ -555,6 +555,9 @@ class Procedure:
         self.next_token()
         peek = self.peek()
         return curr
+
+    # Map funtion can take lambda or defined funtion with one or more arguments, but it should be appropriate.
+    # It can also take + - * / operators  
 
     def parse_map(self):
         peek = self.peek()
@@ -755,6 +758,9 @@ class Procedure:
         self.next_token()
         return False
 
+
+    # Funtion bellow is called with if conditions
+
     def tmpIf(self):
         peek = self.peek()
         ifbody = None
@@ -784,29 +790,6 @@ class Procedure:
             peek = self.peek()
         return ifbody
 
-    def tmpElse(self):
-        peek = self.peek()
-        elsebody = None
-        if peek != None :
-            if peek.get_type() == "IDENTIFIER" :
-                elsebody = self.args[self.names.get(peek.token)]
-                self.next_token()
-                peek = self.peek()
-            elif peek.get_type() == "NUMBER" :
-                    elsebody = self.getNumber(peek.token)
-                    self.next_token()
-                    peek = self.peek()
-            else :
-                if peek.token == "(":
-                    self.next_token()
-                    elsebody = self.parse_expression()
-                elif peek.get_type() == "IDENTIFIER" :
-                    elsebody = self.args[self.names.get(peek.token)]
-                else:
-                    print("no matching syntax rule")
-                    return 0
-        return elsebody
-
     def parse_if(self,data,flag):
 
         tempCheck = self.parse_fullCond(data,flag)
@@ -824,6 +807,7 @@ class Procedure:
                 self.next_token()
                 peek = self.peek()
                 flag = False
+            # Skip first return expression
             c = 1
             while (peek.token != ")" or c != 1) and not(flag) :
                 if peek.token == "(" :
@@ -837,12 +821,14 @@ class Procedure:
             return self.tmpIf()
 
     def parse_append(self):
+
         peek = self.peek()
         if peek == None :
 
             print("unexpected token")
             return
         ls = []
+        # Getting first list
         if peek.token == "(" :
             self.next_token()
             peek = self.peek()
@@ -862,13 +848,11 @@ class Procedure:
             print("unexpected token")
             return
         peek = self.peek()
-        # if peek.token == ")":
-        #     self.next_token()
-        #     peek = self.peek()
         if peek == None :
             print("unexpected token")
             return
         ls2 = []
+        # getting second list
         if peek.token == "(" :
             self.next_token()
             peek = self.peek()
@@ -971,7 +955,6 @@ class Procedure:
         else :
             return
         peek = self.peek()
-        # print(elem)
         if not(isinstance(elem, NUMBER)):
             return
         if peek == None :
@@ -1116,7 +1099,6 @@ class Procedure:
                 self.next_token()
                 peek = self.peek()
                 t+= self.parse_expression(data)
-                # self.next_token()
                 peek = self.peek()
             elif peek.get_type() == "NUMBER":
                 t += self.getNumber(peek.token)
