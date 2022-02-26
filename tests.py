@@ -129,6 +129,10 @@ def testEasyFuncs():
     testsDict["(multi 3 4)"] = [4, 4, 4]
     testsDict["(define (multiply n lst) (apply append (map (lambda (x) (multi n x)) lst)))"] = "success"
     testsDict["(multiply 2 '(1 2 3 4))"] = [1, 1, 2, 2, 3, 3, 4, 4]
+    testsDict["(define (closestnode node) (if (null? (cadr node)) (car node) (+ (car node) (apply min (map closestnode (cadr node))))))"] = "success"
+    testsDict["(closestnode '(100 ((76 ()) (-28 ()))))"] = 72
+    testsDict["(closestnode '(-60 ((-9 ((-2 ((27 ((-28 ()) (76 ()))) (-52 ((76 ()) (-10 ()))))))) (47 ((-97 ((-45 ((58 ()) (32 ()))) (-74 ((-56 ()) (10 ()))))) (-1 ((-27 ((-38 ()) (-13 ()))))))))))"] = -240
+
 
 def printLex(tok):
     for tok in tok: 

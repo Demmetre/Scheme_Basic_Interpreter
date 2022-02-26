@@ -331,7 +331,6 @@ class Procedure:
                 return "unexpected token"
             self.next_token()
             peek = self.peek()
-            # print(peek.token)
             check = self.parse_expression()
             if not(isinstance(check, bool)) :
                 return check
@@ -730,6 +729,7 @@ class Procedure:
             print("unexpected token, open parenthesis expected")
             return
         self.next_token()
+        peek = self.peek()
         return self.parse_expression()
         
     def parse_null(self):
@@ -747,6 +747,7 @@ class Procedure:
         elif peek.token == "(":
             self.next_token()
             temp = self.parse_expression()
+            peek = self.peek()
         else:
             print("invalid type of arguments")
             return
@@ -756,6 +757,7 @@ class Procedure:
         if type(temp) == list and len(temp)== 0 :
             return True
         self.next_token()
+        peek = self.peek()
         return False
 
 
@@ -779,6 +781,9 @@ class Procedure:
             ifbody = self.par_list()
             peek = self.peek()
         else :
+            if peek.token == ")":
+                self.next_token()
+                peek = self.peek()
             if peek.token == "(":
                 self.next_token()
                 peek = self.peek()
@@ -788,12 +793,14 @@ class Procedure:
                 print("no matching syntax rule")
                 return 0
             peek = self.peek()
+            
         return ifbody
 
     def parse_if(self,data,flag):
 
         tempCheck = self.parse_fullCond(data,flag)
         if tempCheck:
+            peek = self.peek()
             return self.tmpIf()
         else :
             peek = self.peek()
